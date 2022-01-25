@@ -110,13 +110,16 @@
         .box-data {
             box-shadow: 0 15px 35px 0 rgba(111, 111, 111, 0.12);
             background: white;
-            display: flex;
+            display: block;
             flex-wrap: wrap;
-            max-width: 1000px;
             margin: auto auto;
             border-radius: 12px;
             min-height: 34rem;
             padding: 34px;
+            margin-top: 100px;
+            margin-bottom: 100px;
+            margin-right: 80px;
+            margin-left: 80px;
         }
         
         .box-column {
@@ -429,7 +432,7 @@
     
 
     <div id="data-visuals" class="hidden">    
-        
+        <div class="heading centered"> </div>        
         <div class = "box">
             <div class = "box-column">
                 <div class="heading centered"> Building Energy Tools Visualization </div>
@@ -441,28 +444,34 @@
                     <h2 style="text-align: center;">Consumption Details </h2>          
                     <h3 style="text-align: left; margin-left: 200px;"> Total Consumption: <span id="totalUsageDiv"></span> kWh </h3>        
                     <h3 style="text-align: left; margin-left: 200px;"> Max Value: <span id="maxDemandDiv"></span> kW </h3>              
-                </div>
             </div>
+        </div>
         
-        <div style="display: block; justify-items: center; align-items: center; align-content: center; text-align: center;"  >
+       
+        <div class = "box-data">
             <div class="heading centered"> Over Time </div>
             <div id='myDiv'></div>
             <div id='dailyUsageChart'></div>         
             <div id='monthlyUsageChart'></div>
         </div>
+        
+        <div class = "box-data">         
             <div class="heading centered"> Relationship to Weather </div>
             <div id='scatterChart'><!-- Plotly chart will be drawn inside this DIV --></div>
             <div id='scatterSubChart'></div>
- 
+        </div>   
         
+        <div class = "box-data">
             <div class="heading centered"> Relationship to time of day </div>
             <div id='barChart'><!-- Plotly chart will be drawn inside this DIV --></div>
             <div id='barSubChart'></div>
-  
+        </div>
 
+        <div class = "box-data">
             <div class="heading centered"> Detailed Relationships </div>
             <div id="my_dataviz"><!-- chart will be drawn inside this DIV --></div>
             <div id="heatChart"></div>
+
             <div class="showcase__section" id="bubble">
                 <div class="spacer --small"></div>
                 <div id="bubbleplots">
@@ -474,6 +483,7 @@
                     </div>
                 </div>
             </div> 
+        </div>
     </div>
 </body>
 
