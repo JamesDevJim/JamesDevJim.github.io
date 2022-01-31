@@ -38,7 +38,6 @@ TODO:
 
 CSV_JSON = [];
 
-
 //Import CSV
 function CSVToArray(strData, strDelimiter) {
   // Check to see if the delimiter is defined. If not,
@@ -127,24 +126,24 @@ async function handleDrop(event) {
 
 // Animate loading, convert csv to JSON, loadCharts, end animation
 async function handleCSV(file) {
-    document.getElementById("file-ui").classList.add("hidden"); // hide load buttons and text in the load box and display loading icon
-    document.getElementById("file-text").classList.add("hidden");
-    document.getElementById("file-ui2").classList.add("hidden");
-    document.getElementById("file-text2").classList.add("hidden");
-    document.getElementById("wait-ui").classList.remove("hidden");
-    const csv = await (file.text ? file.text() : file);
-    CSV_JSON = CSV2JSON(csv);
-    document.getElementById("data-visuals").classList.remove("hidden"); // show visuals. e.g., data and graphs
-    
-    loadCharts(); //run this function after the csv is imported
-    document.getElementById("file-ui").classList.remove("hidden"); // Show loading buttons after file is loaded
-    document.getElementById("file-text").classList.remove("hidden");
-    document.getElementById("file-ui2").classList.remove("hidden");
-    document.getElementById("file-text2").classList.remove("hidden");
-    document.getElementById("wait-ui").classList.add("hidden");
-    
-    //document.getElementById("data-visuals").classList.add("js-plotly-plot");
-    document.getElementById("splash-ui").classList.add("hidden"); // hide loading box
+  document.getElementById("file-ui").classList.add("hidden"); // hide load buttons and text in the load box and display loading icon
+  document.getElementById("file-text").classList.add("hidden");
+  document.getElementById("file-ui2").classList.add("hidden");
+  document.getElementById("file-text2").classList.add("hidden");
+  document.getElementById("wait-ui").classList.remove("hidden");
+  const csv = await (file.text ? file.text() : file);
+  CSV_JSON = CSV2JSON(csv);
+  document.getElementById("data-visuals").classList.remove("hidden"); // show visuals. e.g., data and graphs
+
+  loadCharts(); //run this function after the csv is imported
+  document.getElementById("file-ui").classList.remove("hidden"); // Show loading buttons after file is loaded
+  document.getElementById("file-text").classList.remove("hidden");
+  document.getElementById("file-ui2").classList.remove("hidden");
+  document.getElementById("file-text2").classList.remove("hidden");
+  document.getElementById("wait-ui").classList.add("hidden");
+
+  //document.getElementById("data-visuals").classList.add("js-plotly-plot");
+  document.getElementById("splash-ui").classList.add("hidden"); // hide loading box
 }
 
 // Listen for the file drop
@@ -210,156 +209,78 @@ document.getElementById("do-demo-solar").addEventListener("click", function () {
   handleCSV(sampleCSV);
 });
 
-// Define global variables
-const dateColumn = [],
-    usageColumn = [],
-    lineRows = [],
-    lineDemandRows = [],
-    lineUsageDemandRows = [],
-    scatterRows = [],
-    scatterWeekendRows = [],
-    scatterWeekRows = [],
-    scatterWorkRows = [],
-    calendarRows = [],
-    dailyUsageSum = [],
-    dailyUsageSumTime = [],
-    monthlyUsageSum = [],
-    monthlyUsageSumTime = [],
-    weekendUsage = [],
-    hourlyRows = [];
-    allMonths = [];
 
 // LOAD THE CHARTS
 function loadCharts() {
-    // Define variables
-    let   momPreviousDate = moment(),
-            momPreviousDailyDate = moment(),
-            momPreviousDateForMax = moment(),
-            momPreviousDateForMenu = moment();
-            const hourLength = [];
-            const hourWeekendLength = [];
-            const hourWeekLength = [];
-            const hourTime = [];
-            const hourUsage = [];
-            const day = [];
-            const scatterWeekendTemp = [];
-            const scatterWeekendDemand = [];
-            const scatterWeekTemp = [];
-            const scatterWeekDemand = [];
-            const scatterBusinessTemp = [];
-            const scatterBusinessDemand = [];
-            const xaxis24Hours = [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-                21, 22, 23,
-            ];
-    //const summedBarRows = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-    const summedWeekendBarRows = [
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [3, 0],
-        [4, 0],
-        [5, 0],
-        [6, 0],
-        [7, 0],
-        [8, 0],
-        [9, 0],
-        [10, 0],
-        [11, 0],
-        [12, 0],
-        [13, 0],
-        [14, 0],
-        [15, 0],
-        [16, 0],
-        [17, 0],
-        [18, 0],
-        [19, 0],
-        [20, 0],
-        [21, 0],
-        [22, 0],
-        [23, 0],
-    ];
-    const summedBarRows = [
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [3, 0],
-        [4, 0],
-        [5, 0],
-        [6, 0],
-        [7, 0],
-        [8, 0],
-        [9, 0],
-        [10, 0],
-        [11, 0],
-        [12, 0],
-        [13, 0],
-        [14, 0],
-        [15, 0],
-        [16, 0],
-        [17, 0],
-        [18, 0],
-        [19, 0],
-        [20, 0],
-        [21, 0],
-        [22, 0],
-        [23, 0],
-    ];
-    const summedWeekBarRows = [
-        [0, 0],
-        [1, 0],
-        [2, 0],
-        [3, 0],
-        [4, 0],
-        [5, 0],
-        [6, 0],
-        [7, 0],
-        [8, 0],
-        [9, 0],
-        [10, 0],
-        [11, 0],
-        [12, 0],
-        [13, 0],
-        [14, 0],
-        [15, 0],
-        [16, 0],
-        [17, 0],
-        [18, 0],
-        [19, 0],
-        [20, 0],
-        [21, 0],
-        [22, 0],
-        [23, 0],
-    ];
-    let hourlyDemandDataSummed = []; //[h1, h2, h3...]
-    const barRows = [];
-    var dateMax = [];
-    var dateMin = moment();
-    var usageTotal = 0;
-    var sampleInterval = 0;
-    var maxDemand = 0;
-    var monthDayUsage = []; //y axis
-    var monthDayTime = [];
-    var monthDayUsage2 = []; //y axis
-    var monthDayTime2 = [];
-    var quarterHour = 0;
-    let maxMonthlyDemand = [];
-    let buttonOptions = [];
+  
+  let momPreviousDate = moment(), // define local variables
+    momPreviousDailyDate = moment(),
+    momPreviousWeeklyDate = moment(),    
+    momPreviousDateForMenu = moment();
+    dateMax = moment(),
+    dateMin = moment(),    
+    usageTotal = 0,
+    sampleInterval = 0,
+    maxDemand = 0,
+    maxTemp = 0,
+    minTemp = 60,
+    quarterHour = 0;
 
-    let allDates = [],
-        allMonths = [],
-        allDays = [],
-        allDemand = [],
-        allUsage = [],
-        allTemp = [];
+  const dailyUsageSum = [],
+    dailyUsageSumTime = [],
+    weeklyUsageSum = [],
+    weeklyUsageSumTime = [],
+    monthlyUsageSum = [],
+    monthlyUsageSumTime = [],
+    hourLength = [],
+    hourWeekendLength = [],
+    hourWeekLength = [],
+    hourTime = [],
+    hourUsage = [],
+    day = [],
+    scatterWeekendTemp = [],
+    scatterWeekendDemand = [],
+    scatterWeekTemp = [],
+    scatterWeekDemand = [],
+    scatterBusinessTemp = [],
+    scatterBusinessDemand = [],
+    monthDayUsage = [], //y axis
+    monthDayTime = [],
+    buttonOptions = [],
+    barRows = [];
+    xaxis24Hours = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+    21, 22, 23,
+    ];
 
-    //initialize the multidimentional arrays for the calendar grid
-    for (var i = 0; i < 50; i++) {
-        monthDayTime[i] = [];
-    }
-    for (var i = 0; i < 50; i++) {
-        monthDayUsage[i] = [];
-    }
+  let summedWeekendBarRows = [],
+      summedBarRows = [],
+      summedWeekBarRows = [];      
+
+  for (var i = 0; i < 24; i++) {
+    summedWeekendBarRows[i] = [i,0]; // initialize data array e.g., [[1,0], [2,0], ...]
+  }
+  for (var i = 0; i < 24; i++) {
+    summedBarRows[i] = [i,0]; // initialize data array e.g., [[1,0], [2,0], ...]
+  }
+  for (var i = 0; i < 24; i++) {
+    summedWeekBarRows[i] = [i,0]; // initialize data array e.g., [[1,0], [2,0], ...]
+  }  
+
+  let allDates = [], // create variables for major arrays
+    allMonths = [],
+    allDays = [],
+    allDemand = [],
+    allUsage = [],
+    allTemp = [];
+
+  
+  for (var i = 0; i < 50; i++) {
+    monthDayTime[i] = [];//initialize the multidimentional arrays for the calendar grid
+  }
+  for (var i = 0; i < 50; i++) {
+    monthDayUsage[i] = [];
+  }
 
   // Loop through and create arrays for each chart
   for (const record of CSV_JSON) {
@@ -392,32 +313,30 @@ function loadCharts() {
     usageTotal += usage || 0; // Sum usage data. If value is not a number, then add 0.
 
     if (demand > maxDemand) {
-      // find max demand value
-      maxDemand = demand;
+      maxDemand = demand; // find max demand value
+    }
+
+    if (temp > maxTemp) {
+      maxTemp = temp; // find max temp value
+    }
+
+    if (temp < minTemp){
+      minTemp = temp; // find min temp value
     }
 
     //TODO: fix this detection function
     // Detect sample interval
     if (sampleInterval == 0) {
-        //If sample snterval as not been set
+      //If sample interval as not been set
+      if (previousDate == momDate.format("MM/DD/YYYY")) {
+        quarterHour = quarterHour + 1;
+      }
 
-        if (previousDate == momDate.format("MM/DD/YYYY")) {
-            quarterHour = quarterHour + 1;
-        }
-
-        if (quarterHour == 4) {
-            sampleInterval = "15 minutes";
-        }
-        var previousDate = momDate.format("MM/DD/YYYY");
+      if (quarterHour == 4) {
+        sampleInterval = "15 minutes";
+      }
+      var previousDate = momDate.format("MM/DD/YYYY");
     }
-
-    // Create time series chart data
-    dateColumn.push(momDate.toDate());
-    //usageColumn.push(usage);
-
-    // Create scatter charts data
-    scatterRows.push(temp); //All hours
-    //demandData.push();
 
     if (momDate.day() == 6 || momDate.day() == 0) {
       //If weekend
@@ -436,27 +355,34 @@ function loadCharts() {
 
     // create daily bar chart data
     if (momPreviousDailyDate.isSame(momDate, "day")) {
-        //if same month, then sum usage
-        dailyUsageSum[dailyUsageSum.length - 1] += usage || 0; 
+      dailyUsageSum[dailyUsageSum.length - 1] += usage || 0;
     } else {
-        momPreviousDailyDate = momDate;
-        dailyUsageSumTime.push(momDate.toDate() || "");
-        //dailyUsageSumTime.push(momDate.format("MMM DD YYYY") || "");
-        dailyUsageSum.push(usage || 0); // add another element to the array for the next month.
+      momPreviousDailyDate = momDate;
+      dailyUsageSumTime.push(momDate.toDate() || "");
+      dailyUsageSum.push(usage || 0); 
+    }
+
+    // create weekly bar chart data
+    if (momPreviousWeeklyDate.isSame(momDate, "week")) {
+      weeklyUsageSum[weeklyUsageSum.length - 1] += usage || 0;
+    } else {
+      momPreviousWeeklyDate = momDate;
+      if (momDate.format("MMM DD YYYY") != "Invalid date") {
+        weeklyUsageSumTime.push(momDate.format("MMM DD YYYY") || "");
+        weeklyUsageSum.push(usage || 0); // add another element to the array for the next month.
+      }
     }    
-    
 
     // create monthly bar chart data
     if (momPreviousDate.isSame(momDate, "month")) {
-        //if same month, then sum usage
-        monthlyUsageSum[monthlyUsageSum.length - 1] += usage || 0; //add usage to the month index. "usage || 0 means: If usage is false, then use "0"
+      //if same month, then sum usage
+      monthlyUsageSum[monthlyUsageSum.length - 1] += usage || 0; //add usage to the month index. "usage || 0 means: If usage is false, then use "0"
     } else {
-        //once a new month comes, store that as the new "momPreviousDate", push the month to monthlyUsageSumTime.
-        momPreviousDate = momDate;
-        if(momDate.format("MMM YYYY") != "Invalid date"){
-            monthlyUsageSumTime.push(momDate.format("MMM YYYY") || "");
-            monthlyUsageSum.push(usage || 0); // add another element to the array for the next month.
-        }
+      momPreviousDate = momDate;//once a new month comes, store that as the new "momPreviousDate", push the month to monthlyUsageSumTime.
+      if (momDate.format("MMM YYYY") != "Invalid date") {
+        monthlyUsageSumTime.push(momDate.format("MMM YYYY") || "");
+        monthlyUsageSum.push(usage || 0); // add another element to the array for the next month.
+      }
     }
 
     // create hourly bar chart data
@@ -517,198 +443,246 @@ function loadCharts() {
     // Create buttons for each calendar month profile
 
     if (
-        momPreviousDateForMenu != momDate.format("MMM YYYY") &&
-        momDate.format("MMM YYYY") != "Invalid date"
+      momPreviousDateForMenu != momDate.format("MMM YYYY") &&
+      momDate.format("MMM YYYY") != "Invalid date"
     ) {
-        //create buttons
-        let monthOfGraphs = momDate.format("MMM YYYY");
-        buttonOptions.push(monthOfGraphs);
-        momPreviousDateForMenu = momDate.format("MMM YYYY");
+      //create buttons
+      let monthOfGraphs = momDate.format("MMM YYYY");
+      buttonOptions.push(monthOfGraphs);
+      momPreviousDateForMenu = momDate.format("MMM YYYY");
     }
   
-    } // End of loop for creating data in each array
+  } // End of loop for creating data in each array
 
-    usageTotal = Math.round(usageTotal);
+  usageTotal = Math.round(usageTotal);
 
-    //console.log("maxMonthly", maxMonthlyDemand);
-    //console.log("monthlyUsageSum", monthlyUsageSum);
-    //console.log("monthlyUsageSumtime", monthlyUsageSumTime);
+  //console.log("maxMonthly", maxMonthlyDemand);
+  //console.log("monthlyUsageSum", monthlyUsageSum);
+  //console.log("monthlyUsageSumtime", monthlyUsageSumTime);
 
-    // DATA INFORMATION DISPLAY
-    document.getElementById("maxDateDiv").innerHTML =
-        dateMax.format("MM/DD/YYYY hh:mm");
-    document.getElementById("minDateDiv").innerHTML =
-        dateMin.format("MM/DD/YYYY hh:mm");
-    document.getElementById("dataDaysDiv").innerHTML = Math.round(
-        (dateMax - dateMin) / (60 * 60 * 24 * 1000)
-    );
-    document.getElementById("sampleIntervalDiv").innerHTML = sampleInterval;
-    document.getElementById("totalUsageDiv").innerHTML = usageTotal;
-    document.getElementById("maxDemandDiv").innerHTML = maxDemand;
+  // DATA INFORMATION DISPLAY
+  document.getElementById("maxDateDiv").innerHTML =
+    dateMax.format("MM/DD/YYYY hh:mm");
+  document.getElementById("minDateDiv").innerHTML =
+    dateMin.format("MM/DD/YYYY hh:mm");
+  document.getElementById("dataDaysDiv").innerHTML = Math.round(
+    (dateMax - dateMin) / (60 * 60 * 24 * 1000)
+  );
+  document.getElementById("sampleIntervalDiv").innerHTML = sampleInterval;
+  document.getElementById("totalUsageDiv").innerHTML = usageTotal;
+  document.getElementById("maxDemandDiv").innerHTML = maxDemand;
 
-    // Takes CSV JSON input, makes the header a key to be pulled via unpack function. This essentially grabs the column
-    function unpack(CSV_JSON, key) {
-        return CSV_JSON.map(function (row) {
-        return row[key];
-        });
-    }
+  // Takes CSV JSON input, makes the header a key to be pulled via unpack function. This essentially grabs the column
+  function unpack(CSV_JSON, key) {
+    return CSV_JSON.map(function (row) {
+      return row[key];
+    });
+  }
 
-    // LINE CHART
-    var trace1 = {
-        //x: unpack(CSV_JSON, "Start Date Time"), //Should look like ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-        x: dateColumn,
-        y: unpack(CSV_JSON, "Peak Demand"), // Should look like [1, 3, 6],
-        type: "scatter",
-        mode: "lines",
-        name: "Demand",
-        line: { color: "#17BECF",
-                width: 1
-        },
-    };
+  // LINE CHART
+  var trace1 = {
+    //x: unpack(CSV_JSON, "Start Date Time"), //Should look like ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+    x: allDates,
+    y: unpack(CSV_JSON, "Peak Demand"), // Should look like [1, 3, 6],
+    type: "scatter",
+    mode: "lines",
+    name: "Demand",
+    line: { color: "#17BECF", width: 1 },
+  };
 
-    var trace2 = {
-        //x: unpack(CSV_JSON, "Start Date Time"), //Should look like ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-        x: dateColumn,
-        y: unpack(CSV_JSON, "Avg. Temperature"), // Should look like [1, 3, 6],
-        //type: "scatter",
-        mode: "lines",
-        name: "Outdoor Temp",
-        line: {//color: '#AC351C',
-            width: 1    
-        },
-        yaxis: "y2",
-        type: "scatter",
-    };
-    var lineData = [trace1, trace2];
+  var trace2 = {
+    //x: unpack(CSV_JSON, "Start Date Time"), //Should look like ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+    x: allDates,
+    y: unpack(CSV_JSON, "Avg. Temperature"), // Should look like [1, 3, 6],
+    //type: "scatter",
+    mode: "lines",
+    name: "Outdoor Temp",
+    line: {
+      //color: '#AC351C',
+      width: 1,
+    },
+    yaxis: "y2",
+    type: "scatter",
+  };
+  var lineData = [trace1, trace2];
 
-    var lineLayout = {
-        autosize: true,
-        xaxis: {
-            title: "Date range selector",
-            autorange: true,
-            type: "date", // can be -, linear, log, date, category, or multicategory
-            //dtick: 'tick0',
-            //tickformat: "%b %d, %Y",
+  var lineLayout = {
+    autosize: true,
+    xaxis: {
+      title: "Date range selector",
+      autorange: true,
+      type: "date", // can be -, linear, log, date, category, or multicategory
+      //dtick: 'tick0',
+      //tickformat: "%b %d, %Y",
 
-            rangeslider: {
-                visible: true,
-                autorange: true,
-            },
-            visible: true,
-            rangeselector: {
-                buttons: [
-                {
-                    count: 1,
-                    label: "1m",
-                    step: "month",
-                    stepmode: "backward",
-                },
-                {
-                    count: 6,
-                    label: "6m",
-                    step: "month",
-                    stepmode: "backward",
-                },
-                { step: "all" },
-                ],
-            },
-        },
+      rangeslider: {
+        visible: true,
+        autorange: true,
+      },
+      visible: true,
+      rangeselector: {
+        buttons: [
+          {
+            count: 1,
+            label: "1m",
+            step: "month",
+            stepmode: "backward",
+          },
+          {
+            count: 6,
+            label: "6m",
+            step: "month",
+            stepmode: "backward",
+          },
+          { step: "all" },
+        ],
+      },
+    },
 
-        yaxis: {
-            title: "Demand (kW)",
-            autorange: true,
-            type: "linear",
-            autosize: true,
-            height: 1000,
-            titlefont: { size: 10 },
-        },
+    yaxis: {
+      title: "Demand (kW)",
+      autorange: true,
+      type: "linear",
+      autosize: true,
+      height: 1000,
+      titlefont: { size: 10 },
+    },
 
-        yaxis2: {
-            autorange: true,
-            autosize: true,
-            title: "Temperature (F)",
-            type: "linear",
-            autosize: true,
-            height: 1000,
-            titlefont: { size: 10 },
-        },
+    yaxis2: {
+      autorange: true,
+      autosize: true,
+      title: "Temperature (F)",
+      type: "linear",
+      autosize: true,
+      height: 1000,
+      titlefont: { size: 10 },
+    },
 
-        grid: {
-            rows: 2,
-            columns: 1,
-            pattern: "coupled",
-            roworder: "top to bottom",
-        },
-    };
+    grid: {
+      rows: 2,
+      columns: 1,
+      pattern: "coupled",
+      roworder: "top to bottom",
+    },
+  };
 
-    var lineConfig = {
-        responsive: true,
-        maintainAspectRatio: false,
-    };
+  var lineConfig = {
+    responsive: true,
+    maintainAspectRatio: false,
+  };
 
-    Plotly.newPlot("myDiv", lineData, lineLayout, lineConfig);
+  Plotly.newPlot("myDiv", lineData, lineLayout, lineConfig);
 
-    
-    // DAILY BAR CHART
+  // DAILY BAR CHART
+  const dailyUsageData = [
+    {
+      type: "bar",
+      //mode: "lines",
+      name: "Peak Demand",
+      x: dailyUsageSumTime,
+      y: dailyUsageSum,
+      line: { color: "#17BECF" },
+    },
+  ];
 
-    const dailyUsageData = [
-        {
-            type: "bar",
-            //mode: "lines",
-            name: "Peak Demand",
-            x: dailyUsageSumTime,
-            y: dailyUsageSum,
-            line: { color: "#17BECF" },
-        },
-    ];
+  const dailyUsageLayout = {
+    title: "Daily",
+    xaxis: {
+      ticks: "",
+      side: "bottom",
+      tickangle: 35,
+      tickformat: '%b %Y',
+      nticks: monthlyUsageSumTime.length,
+    },
 
-    const dailyUsageLayout = {
-        title: "Daily",
-        xaxis: {
-            ticks: "",
-            side: "bottom",
-        },
-        yaxis: {
-            title: "Consumption (kWh)",
-            type: "-",
-            automargin: true,
-        },
-    };   
 
-    const dailyUsageConfig = {
-        responsive: true,
-    };    
+    yaxis: {
+      title: "Consumption (kWh)",
+      type: "-",
+      automargin: true,
+    },
+  };
 
-    Plotly.newPlot("dailyUsageChart", dailyUsageData, dailyUsageLayout, dailyUsageConfig);
+  const dailyUsageConfig = {
+    responsive: true,
+  };
+
+  Plotly.newPlot(
+    "dailyUsageChart",
+    dailyUsageData,
+    dailyUsageLayout,
+    dailyUsageConfig
+  );
+
   
-    // MONTHLY BAR CHART
-    const monthlyUsageData = [
-        {
-        type: "bar",
-        //mode: "lines",
-        name: "Peak Demand",
-        x: monthlyUsageSumTime,
-        y: monthlyUsageSum,
-        line: { color: "#17BECF" },
-        },
-    ];
+  // WEEKLY BAR CHART
+  const weeklyUsageData = [
+    {
+      type: "bar",
+      //mode: "lines",
+      name: "Peak Demand",
+      x: weeklyUsageSumTime,
+      y: weeklyUsageSum,
+      line: { color: "#17BECF" },
+    },
+  ];
 
-    const monthlyUsageLayout = {
-        title: "Monthly",
-        xaxis: {
-            ticks: "",
-            side: "bottom",
-        },
-        yaxis: {
-        title: "Consumption (kWh)",
-        type: "-",
-        automargin: true,
-        },
-    };
+  const weeklyUsageLayout = {
+    title: "Weekly",
+    xaxis: {
+      ticks: "",
+      side: "bottom",
+      tickangle: 35,
+    },
+    yaxis: {
+      title: "Consumption (kWh)",
+      type: "-",
+      automargin: true,
+    },
+  };
 
-    const monthlyUsageConfig = {responsive: true};
+  const weeklyUsageConfig = {
+    responsive: true,
+  };
 
-    Plotly.newPlot("monthlyUsageChart", monthlyUsageData, monthlyUsageLayout, monthlyUsageConfig);
+  Plotly.newPlot(
+    "weeklyUsageChart",
+    weeklyUsageData,
+    weeklyUsageLayout,
+    weeklyUsageConfig
+  );  
+  
+  
+  
+  // MONTHLY BAR CHART
+  const monthlyUsageData = [
+    {
+      type: "bar",
+      //mode: "lines",
+      name: "Peak Demand",
+      x: monthlyUsageSumTime,
+      y: monthlyUsageSum,
+      line: { color: "#17BECF" },
+    },
+  ];
+
+  const monthlyUsageLayout = {
+    title: "Monthly",
+    xaxis: {
+      ticks: "",
+      side: "bottom",
+      tickangle: 35,
+    },
+    yaxis: {
+      title: "Consumption (kWh)",
+      type: "-",
+      automargin: true,
+    },
+  };
+
+  const monthlyUsageConfig = { responsive: true };
+
+  Plotly.newPlot("monthlyUsageChart",monthlyUsageData, monthlyUsageLayout, monthlyUsageConfig);
 
   // SCATTER CHART
   var scatterData = [
@@ -727,10 +701,11 @@ function loadCharts() {
       title: "Outdoor Air Temperature (F)",
       ticks: "",
       side: "bottom",
+      range: [minTemp, maxTemp],
     },
     yaxis: {
       title: "Demand (kW)",
-      range: [0,maxDemand],
+      range: [0, maxDemand],
       type: "-",
       automargin: true,
     },
@@ -783,15 +758,16 @@ function loadCharts() {
 
   const xaxisValue = {
     title: "Outdoor Air Temp (F)",
-    autorange: true,
+    autorange: false,
     type: "scatter",
     titlefont: { size: 10 },
+    range: [minTemp, maxTemp],
   };
 
   const yaxisValue = {
     title: "Demand (kW)",
     //autorange: true,
-    range: [0,maxDemand],
+    range: [0, maxDemand],
     autosize: true,
     titlefont: { size: 10 },
   };
@@ -866,8 +842,7 @@ function loadCharts() {
     //console.log(`summedRow`, summedRow);
     barRows[i] = summedRow[1] / (hourLength[i] / 4); //Need to divide by 4 because there are 4 quarters in 1 hour.
     if (barRows[i] > demandAvgHourlyMax) {
-      // find maximum yaxis value to set all the yaxis to have the same range.
-      demandAvgHourlyMax = barRows[i];
+      demandAvgHourlyMax = barRows[i]; // find maximum yaxis value to set all the yaxis to have the same range.
     }
   }
 
@@ -877,9 +852,9 @@ function loadCharts() {
     const i = parseInt(index);
     const summedWeekendRow = summedWeekendBarRows[i];
     barWeekendRows[i] = summedWeekendRow[1] / (hourWeekendLength[i] / 4);
+    
     if (barWeekendRows[i] > demandAvgHourlyMax) {
-      // find maximum yaxis value to set all the yaxis to have the same range.
-      demandAvgHourlyMax = barWeekendRows[i];
+      demandAvgHourlyMax = barWeekendRows[i]; // find maximum yaxis value to set all the yaxis to have the same range.
     }
   }
 
@@ -890,8 +865,7 @@ function loadCharts() {
     const summedWeekRow = summedWeekBarRows[i];
     barWeekRows[i] = summedWeekRow[1] / (hourWeekLength[i] / 4);
     if (barWeekRows[i] > demandAvgHourlyMax) {
-      // find maximum yaxis value to set all the yaxis to have the same range.
-      demandAvgHourlyMax = barWeekRows[i];
+      demandAvgHourlyMax = barWeekRows[i]; // find maximum yaxis value to set all the yaxis to have the same range.
     }
   }
 
@@ -1027,9 +1001,11 @@ function loadCharts() {
       x: hourTime,
       y: day,
       type: "heatmap",
+      name:'Demand(kW)',
       legendgrouptitle: { text: "Demand (kW)" },
       zsmooth: "best",
       title: "Demand (kW)",
+      legendgrouptitle:{text:'Demand (kW)'}
     },
   ];
 
@@ -1053,7 +1029,10 @@ function loadCharts() {
       //title: "Day",
       type: "date",
       automargin: true,
+      tickformat: '%b %Y',
+      nticks: monthlyUsageSumTime.length,
     },
+    
   };
 
   Plotly.newPlot("heatChart", heatData, heatLayout, { responsive: true });
@@ -1109,202 +1088,209 @@ function loadCharts() {
   // create each graph for each day of the month
 
   // make a trace for each day, based on the selected month
-    function makeCalData(chosenMonth) {
-        let calTrace = {},
-        calData = [];
+  function makeCalData(chosenMonth) {
+    let calTrace = {},
+      calData = [];
 
-        // find first day of the week.
-        let firstDayIndex = 0;
-        for (let i = 0; i < 30; i++) {
-        if (typeof getMonthTimeData(chosenMonth, i)[0] != "undefined") {
-            firstDayIndex = i;
-            break;
-        }
-        }
+    // find first day of the week.
+    let firstDayIndex = 0;
+    for (let i = 0; i < 30; i++) {
+      if (typeof getMonthTimeData(chosenMonth, i)[0] != "undefined") {
+        firstDayIndex = i;
+        break;
+      }
+    }
 
-        let firstDayOfWeek = moment(
-        getMonthTimeData(chosenMonth, firstDayIndex)[0]).day(); // find the first day of the week (sun = 0, sat = 6)
-        if (firstDayOfWeek === 0) {
-        firstDayOfWeek = 7;
-        } // change 0 to 7 for easier manipulation (Mon = 1, Sun = 7)
+    let firstDayOfWeek = moment(
+      getMonthTimeData(chosenMonth, firstDayIndex)[0]
+    ).day(); // find the first day of the week (sun = 0, sat = 6)
+    if (firstDayOfWeek === 0) {
+      firstDayOfWeek = 7;
+    } // change 0 to 7 for easier manipulation (Mon = 1, Sun = 7)
 
-        let monthDayCounter = 0;
-        for (var i = 0; i < 43; i++) {
-            if (i + 1 <= firstDayIndex) {
-                calTrace[i] = {
-                x: [], // make the graph blank untill the first day matches the day of the week
-                y: [],
-                type: "scatter",
-                mode: "lines",
-                xaxis: "x" + i,
-                yaxis: "y" + i,
-                };
-                firstDayOfWeek--;
-            } else {
-                var dayVar = i - firstDayOfWeek;
-                calTrace[i] = {
-                x: getMonthTimeData(chosenMonth, dayVar),
-                y: getMonthDemandData(chosenMonth, dayVar),
-                type: "scatter",
-                mode: "lines",
-                xaxis: "x" + i,
-                yaxis: "y" + i,
-                };
-            }
-            // count the amount of days in this month
-            if(calTrace[i].x.length>5){
-                monthDayCounter++
-            }
-            
-            //console.log("i:", i, "calTrace[i].x.length", calTrace[i].x.length);
-            //console.log("i:", i, "calTrace[i].y.length", calTrace[i].y.length);
-            calData.push(calTrace[i]); // place each trace object into the data array
-        }
-        //TODO: Fix date to match with correct calendar graph
-
-        // do this again because we need the true first day of the week
-        firstDayOfWeek = moment(
-            getMonthTimeData(chosenMonth, firstDayIndex)[0]).day(); // find the first day of the week (sun = 0, sat = 6)
-        if (firstDayOfWeek === 0) {
-            firstDayOfWeek = 7;
-        } // change 0 to 7 for easier manipulation (Mon = 1, Sun = 7)
-        
-        // Create annotation date title for each day of the month
-        let dayOfWeek = ["Monday" ,"Tuesday" , "Wednesday" , "Thursday" ,"Friday" ,"Saturday" , "Sunday"];
-        let annotationArray = []; //array
-        let annotationObj = {}; //dictionary
-        
-        for (var i = 0; i < monthDayCounter; i++) {
-        var addNum = i + firstDayOfWeek;
-        let dayOfGraph = moment(getMonthTimeData(chosenMonth, i + firstDayIndex)[0]).format(
-            "MMM DD YYYY");
-
-        annotationObj[i] =
-            // create each trace object with the following key value pairs
-            {
-            text: dayOfGraph,
-            font: { size: 12 },
-            showarrow: false,
-            align: "center",
-            //x: 0,
-            xref: "x" + addNum + " domain",
-            y: 1.2,
-            yref: "y" + addNum + " domain",
-            },
-            annotationArray.push(annotationObj[i]); // place each trace object into the data array
-
-            // make day of the week titles
-            if(i<8 && i>0){
-                annotationObj[i] =
-                {
-                    text: dayOfWeek[i-1],
-                    font: { size: 20 },
-                    showarrow: false,
-                    align: "center",
-                    //x: 0,
-                    xref: "x" + i + " domain",
-                    y: 1.5,
-                    yref: "y" + i + " domain",
-                },
-                annotationArray.push(annotationObj[i]);    
-            }
-
-        }
-
-        var calLayout = {
-            title: 'Calendar Profile',
-            font: { size: 20 },
-            borderwidth: 3,
-            autosize: true,
-            showlegend: false,
-            height: 1000,
-            annotations: annotationArray,
-            plot_bgcolor: "#dddddd",
-            grid: {
-                rows: 6,
-                columns: 7,
-                pattern: "independent",
-            },
+    let monthDayCounter = 0;
+    for (var i = 0; i < 43; i++) {
+      if (i + 1 <= firstDayIndex) {
+        calTrace[i] = {
+          x: [], // make the graph blank untill the first day matches the day of the week
+          y: [],
+          type: "scatter",
+          mode: "lines",
+          xaxis: "x" + i,
+          yaxis: "y" + i,
         };
+        firstDayOfWeek--;
+      } else {
+        var dayVar = i - firstDayOfWeek;
+        calTrace[i] = {
+          x: getMonthTimeData(chosenMonth, dayVar),
+          y: getMonthDemandData(chosenMonth, dayVar),
+          type: "scatter",
+          mode: "lines",
+          xaxis: "x" + i,
+          yaxis: "y" + i,
+        };
+      }
+      // count the amount of days in this month
+      if (calTrace[i].x.length > 5) {
+        monthDayCounter++;
+      }
 
-        // add xaxis layout properties for each subplot
-        for (var i = 1; i < 43 + 6; i++) {
-        //should be number of grids. 43+6
-        var xaxisObj = "xaxis" + i;
-        var yaxisObj = "yaxis" + i;
+      //console.log("i:", i, "calTrace[i].x.length", calTrace[i].x.length);
+      //console.log("i:", i, "calTrace[i].y.length", calTrace[i].y.length);
+      calData.push(calTrace[i]); // place each trace object into the data array
+    }
+    //TODO: Fix date to match with correct calendar graph
 
-            // if the plot is in the first column then show y axis, else do not.
-            if (i == 1 || i == 8 || i == 15 || i == 22 || i == 29 || i == 36) {
-                // if monday, then show yaxis labels, else do not.
-                calLayout[xaxisObj] = {
-                    showticklabels: false,
-                    linecolor: "black",
-                    linewidth: 1,
-                    mirror: true,
-                    zeroline: false,
-                };
-                calLayout[yaxisObj] = {
-                    title: "Demand (kW)",
-                    titlefont: { size: 15 },
-                    showticklabels: true,
-                    visible: true,
-                    range: [0, getMonthMaxDemand(chosenMonth)], // set the range from 0 to maximum value of the month.
-                    linecolor: "black",
-                    linewidth: 1,
-                    mirror: true,
-                    zeroline: false,
-                };
-            } else {
-                calLayout[xaxisObj] = {
-                    showticklabels: false,
-                    linecolor: "black",
-                    linewidth: 1,
-                    mirror: true,
-                    zeroline: false,
-                };
-                calLayout[yaxisObj] = {
-                    showticklabels: false,
-                    range: [0, getMonthMaxDemand(chosenMonth)], // set the range from 0 t0 maximum value of the month.
-                    linecolor: "black",
-                    linewidth: 1,
-                    mirror: true,
-                    zeroline: false,
-                };
-            }
-        }
+    // do this again because we need the true first day of the week
+    firstDayOfWeek = moment(
+      getMonthTimeData(chosenMonth, firstDayIndex)[0]
+    ).day(); // find the first day of the week (sun = 0, sat = 6)
+    if (firstDayOfWeek === 0) {
+      firstDayOfWeek = 7;
+    } // change 0 to 7 for easier manipulation (Mon = 1, Sun = 7)
 
-        var calConfig = { responsive: true };
+    // Create annotation date title for each day of the month
+    let dayOfWeek = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
+    ];
+    let annotationArray = []; //array
+    let annotationObj = {}; //dictionary
 
-        updateChart(calData, calLayout, calConfig);
+    for (var i = 0; i < monthDayCounter; i++) {
+      var addNum = i + firstDayOfWeek;
+      let dayOfGraph = moment(
+        getMonthTimeData(chosenMonth, i + firstDayIndex)[0]
+      ).format("MMM DD YYYY");
 
+      (annotationObj[i] =
+        // create each trace object with the following key value pairs
+        {
+          text: dayOfGraph,
+          font: { size: 12 },
+          showarrow: false,
+          align: "center",
+          //x: 0,
+          xref: "x" + addNum + " domain",
+          y: 1.2,
+          yref: "y" + addNum + " domain",
+        }),
+        annotationArray.push(annotationObj[i]); // place each trace object into the data array
+
+      // make day of the week titles
+      if (i < 8 && i > 0) {
+        (annotationObj[i] = {
+          text: dayOfWeek[i - 1],
+          font: { size: 20 },
+          showarrow: false,
+          align: "center",
+          //x: 0,
+          xref: "x" + i + " domain",
+          y: 1.5,
+          yref: "y" + i + " domain",
+        }),
+          annotationArray.push(annotationObj[i]);
+      }
     }
 
-    function updateChart(calData, calLayout, calConfig) {
-        //console.log('updateCharts activated');
-        Plotly.newPlot("calChart", calData, calLayout, calConfig);
+    var calLayout = {
+      title: "Calendar Profile",
+      font: { size: 20 },
+      borderwidth: 3,
+      autosize: true,
+      showlegend: false,
+      height: 1000,
+      annotations: annotationArray,
+      plot_bgcolor: "#dddddd",
+      grid: {
+        rows: 6,
+        columns: 7,
+        pattern: "independent",
+      },
+    };
+
+    // add xaxis layout properties for each subplot
+    for (var i = 1; i < 43 + 6; i++) {
+      //should be number of grids. 43+6
+      var xaxisObj = "xaxis" + i;
+      var yaxisObj = "yaxis" + i;
+
+      // if the plot is in the first column then show y axis, else do not.
+      if (i == 1 || i == 8 || i == 15 || i == 22 || i == 29 || i == 36) {
+        // if monday, then show yaxis labels, else do not.
+        calLayout[xaxisObj] = {
+          showticklabels: false,
+          linecolor: "black",
+          linewidth: 1,
+          mirror: true,
+          zeroline: false,
+        };
+        calLayout[yaxisObj] = {
+          title: "Demand (kW)",
+          titlefont: { size: 15 },
+          showticklabels: true,
+          visible: true,
+          range: [0, getMonthMaxDemand(chosenMonth)], // set the range from 0 to maximum value of the month.
+          linecolor: "black",
+          linewidth: 1,
+          mirror: true,
+          zeroline: false,
+        };
+      } else {
+        calLayout[xaxisObj] = {
+          showticklabels: false,
+          linecolor: "black",
+          linewidth: 1,
+          mirror: true,
+          zeroline: false,
+        };
+        calLayout[yaxisObj] = {
+          showticklabels: false,
+          range: [0, getMonthMaxDemand(chosenMonth)], // set the range from 0 t0 maximum value of the month.
+          linecolor: "black",
+          linewidth: 1,
+          mirror: true,
+          zeroline: false,
+        };
+      }
     }
 
-    var innerContainer = document.querySelector('[data-num="0"'),
+    var calConfig = { responsive: true };
+
+    updateChart(calData, calLayout, calConfig);
+  }
+
+  function updateChart(calData, calLayout, calConfig) {
+    //console.log('updateCharts activated');
+    Plotly.newPlot("calChart", calData, calLayout, calConfig);
+  }
+
+  var innerContainer = document.querySelector('[data-num="0"'),
     plotEl = innerContainer.querySelector(".plot"),
     monthSelector = innerContainer.querySelector(".monthDataList"); // grab the monthSelector and pass it to the assignOptions function
 
-    // create the list of months on the web page
-    function assignOptions(textArray, selector) {
-        for (var i = 0; i < textArray.length; i++) {
-        var currentOption = document.createElement("option");
-        currentOption.text = textArray[i];
-        selector.appendChild(currentOption);
-        }
+  // create the list of months on the web page
+  function assignOptions(textArray, selector) {
+    for (var i = 0; i < textArray.length; i++) {
+      var currentOption = document.createElement("option");
+      currentOption.text = textArray[i];
+      selector.appendChild(currentOption);
     }
+  }
 
-    // call the function and push the list to the drop down menu
-    assignOptions(listofMonths, monthSelector);
+  // call the function and push the list to the drop down menu
+  assignOptions(listofMonths, monthSelector);
 
-    monthSelector.addEventListener("change", updateMonth, false); // grab the month when selected on the page
+  monthSelector.addEventListener("change", updateMonth, false); // grab the month when selected on the page
 
-    // run the function when menu selection is changed.
-    function updateMonth() {
-        makeCalData(monthSelector.value);
-    }
-
+  // run the function when menu selection is changed.
+  function updateMonth() {
+    makeCalData(monthSelector.value);
+  }
 }
